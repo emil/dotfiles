@@ -541,3 +541,30 @@ by using nxml's indentation rules."
   :config (setq dumb-jump-selector 'helm)
   :ensure)
 (dumb-jump-mode)
+
+(use-package flymd)
+;; https://github.com/mola-T/flymd/blob/master/browser.md
+(defun my-flymd-browser-function (url)
+  (let ((process-environment (browse-url-process-environment)))
+    (apply 'start-process
+           (concat "firefox " url)
+           nil
+           "/usr/bin/open"
+           (list "-a" "firefox" url))))
+(setq flymd-browser-open-function 'my-flymd-browser-function)
+
+(use-package company               
+  :ensure t
+  :defer t
+  :init (global-company-mode)
+  :config
+  (progn
+    ;; Use Company for completion
+    (bind-key [remap completion-at-point] #'company-complete company-mode-map)
+
+    (setq company-tooltip-align-annotations t
+          ;; Easy navigation to candidates with M-<n>
+          company-show-numbers t)
+    (setq company-dabbrev-downcase nil))
+  :diminish company-mode)
+
